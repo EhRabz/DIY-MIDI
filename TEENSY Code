@@ -1,13 +1,18 @@
 #include <Bounce.h>
 
+//change the channel to what you want the MIDI channel to be
 const int channel = 1;
+
 // define how many pots are active up to number of available analog inputs ( Total # of Encoders / Faders )
 #define analogInputs 5
+
 // make arrays for input values and lagged input values
 int inputAnalog[analogInputs];
 int iAlag[analogInputs];
+
 // make array of cc values
 int ccValue[analogInputs];
+
 // index variable for loop
 int i;
 
@@ -34,7 +39,7 @@ int cc13 = 64;
 int cc14 = 65;
 int cc15 = 66;
 
-//Follow format to add / remove buttons the (0,15 / 1,15 etc, changes to 0,#of your buttons) [example 0,8 1,8 1,8]
+//Follow format to add / remove buttons first number represents the pin, second number represents "bounce time" 
 Bounce button0 = Bounce(0, 5);
 Bounce button1 = Bounce(1, 5);
 Bounce button2 = Bounce(2, 5);
@@ -57,7 +62,7 @@ Bounce button15 = Bounce(21, 5);
 
 
 void setup() {
-  //start reading pins, disable any pins you're not using to remove any "ghost" values
+  //start reading pins, disable/don't add any pins you're not using to remove any "ghost" values
   // MIDI rate
   Serial.begin(31250);
   pinMode(0, INPUT_PULLUP);
@@ -73,7 +78,7 @@ void setup() {
   pinMode(10, INPUT_PULLUP);
   pinMode(11, INPUT_PULLUP);
   pinMode(12, INPUT_PULLUP);
-  pinMode(13, INPUT_PULLUP);
+  //pinMode(13, INPUT_PULLUP); LED PIN
   pinMode(14, INPUT_PULLUP);
   pinMode(15, INPUT_PULLUP);
   pinMode(16, INPUT_PULLUP);
@@ -103,7 +108,7 @@ void loop() {
   delay(5); // limits MIDI messages to reasonable number
   }
   
-  // Push Button code, +/- to match amount of buttons you're using , keeping in mind button numbers start at 0 ( 1-15 for 16 buttons in this case)
+  // Push Button code, +/- to match amount of buttons you're using , keeping in mind numbers start at 0 ( 1-15 for 16 buttons in this case)
   button0.update();
   button1.update();
   button2.update();
@@ -122,7 +127,7 @@ void loop() {
   button15.update();
 
  //FallingEdge (Button is pressed)
- //First part of ()'s is CC note variable (51-66 in this case) , the CC I/O represents if the note is turned off or on (on for faling edge, off for rising ), Lastly is MIDI channel ( 3 in this case)
+ //First part of ()'s is CC note variable (51-66 in this case) , the CC I/O represents if the note is turned off or on (on for faling edge, off for rising ), Lastly is MIDI channel ( 1 in this case)
    if (button0.fallingEdge())
   {
     usbMIDI.sendNoteOn(cc0, cc_on, channel);
